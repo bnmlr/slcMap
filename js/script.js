@@ -1,6 +1,3 @@
-var map;
-
-var marker;
 
 function initMap() {
     var myLatlng = {lat: -34.397, lng: 150.644};
@@ -10,7 +7,7 @@ function initMap() {
         zoom: 8
     });
 
-    marker = new google.maps.Marker({
+    var marker = new google.maps.Marker({
         position: myLatlng,
         map: map,
         title: 'Click to zoom'
@@ -20,9 +17,8 @@ function initMap() {
     content: "Some Content"
     });
     marker.addListener('click', function() {
+        //marker bounces once on click
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        // 3 seconds after the center of the map has changed, pan back to the
-        // marker.
         window.setTimeout(function() {
            marker.setAnimation(null);
         }, 700);
