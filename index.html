@@ -9,8 +9,8 @@
 <body>
     <div id="list">
         <h3>Locations</h3>
-        <ul id="locationList" data-bind="foreach: placeArray">
-            <li data-bind="text: $data"></li>
+        <ul id="locationList" data-bind="foreach: arrayOfAllMyLocations">
+            <li data-bind="text: name"></li>
         </ul>    
     </div>
     <div id="map"></div>
