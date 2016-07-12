@@ -55,27 +55,11 @@ function initMap() {
 
 //this will allow me to set teh bounds of the map to wherever the markers are. look it up
     bounds = new google.maps.LatLngBounds();
-
-    // var marker = new google.maps.Marker({
-    //     position: myLatlng,
-    //     map: map,
-    //     title: 'Click to zoom'
-    // });
  
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: "Some Content"
     });
-    // marker.addListener('click', function() {
-    //     //marker bounces once on click
-    //     marker.setAnimation(google.maps.Animation.BOUNCE);
-    //     window.setTimeout(function() {
-    //        marker.setAnimation(null);
-    //     }, 700);
-    // });
-    // marker.addListener('click', function(){
-    //     infowindow.open(map, marker);
-    // });
 
     createMarkers();
 }
@@ -90,10 +74,16 @@ function createMarkers() {
             map: map,
             title: vm.arrayOfAllMyLocations()[i].name()
         });
-        console.log(marker);
         marker.addListener('click', function(){
-            console.log(marker);
             infowindow.open(map, this);
+        });
+        marker.addListener('click', function() {
+            //marker bounces once on click
+            this.setAnimation(google.maps.Animation.BOUNCE);
+            self = this
+            window.setTimeout(function() {
+               self.setAnimation(null);
+            }, 700);
         });
         vm.arrayOfAllMyLocations()[i].marker = marker;
     }
