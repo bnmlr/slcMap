@@ -1,5 +1,5 @@
 
-//code organization based on Heidi Kasemir gist
+//code organization based on Heidi Kasemir gist w/ help from Ryan Vrba
 //model
 var data = [{
     name: "Liberty Park",
@@ -20,8 +20,8 @@ var ViewModel = function() {
     var self = this;
     self.arrayOfAllMyLocations = ko.observableArray();
     data.forEach(function(location) {
-    self.arrayOfAllMyLocations.push(new PlaceConstructor(location));
-    // you can also make all the markers here
+        self.arrayOfAllMyLocations.push(new PlaceConstructor(location));
+        // you can also make all the markers here
 
     })
 
@@ -35,35 +35,66 @@ var ViewModel = function() {
 
 }
 
-ko.applyBindings(new ViewModel());
+
+//make these variable accessible globally
+var vm = new ViewModel();
+ko.applyBindings(vm);
+
+var map,
+    infowindow,
+    bounds;
 
 
 function initMap() {
     var myLatlng = {lat: 40.761353, lng: -111.891851};
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         center: myLatlng,
         zoom: 13
     });
 
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: 'Click to zoom'
+//this will allow me to set teh bounds of the map to wherever the markers are. look it up
+    bounds = new google.maps.LatLngBounds();
+
+    // var marker = new google.maps.Marker({
+    //     position: myLatlng,
+    //     map: map,
+    //     title: 'Click to zoom'
+    // });
+ 
+ //create one infowindow and just switch out the content on clicks   
+    infowindow = new google.maps.InfoWindow({
+        content: "Some Content"
     });
-    
-    var infowindow = new google.maps.InfoWindow({
-    content: "Some Content"
-    });
-    marker.addListener('click', function() {
-        //marker bounces once on click
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        window.setTimeout(function() {
-           marker.setAnimation(null);
-        }, 700);
-    });
-    marker.addListener('click', function(){
-        infowindow.open(map, marker);
-    });
+    // marker.addListener('click', function() {
+    //     //marker bounces once on click
+    //     marker.setAnimation(google.maps.Animation.BOUNCE);
+    //     window.setTimeout(function() {
+    //        marker.setAnimation(null);
+    //     }, 700);
+    // });
+    // marker.addListener('click', function(){
+    //     infowindow.open(map, marker);
+    // });
+
+    createMarkers();
 }
 
+//define function here, call it inside initmap
+//can add event listeners here, but make results of listeners a separate function that gets called
+//by the listener
+function createMarkers() {
+    for (var i = 0; i < vm.arrayOfAllMyLocations().length; i++) {
+        var marker = new google.maps.Marker({
+            position: vm.arrayOfAllMyLocations()[i].pos(),
+            map: map,
+            title: vm.arrayOfAllMyLocations()[i].name()
+        });
+        console.log(marker);
+        marker.addListener('click', function(){
+            console.log(marker);
+            infowindow.open(map, this);
+        });
+        vm.arrayOfAllMyLocations()[i].marker = marker;
+    }
+};  
