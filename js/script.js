@@ -55,11 +55,21 @@ function initMap() {
 
 //this will allow me to set teh bounds of the map to wherever the markers are. look it up
     bounds = new google.maps.LatLngBounds();
+
+    // var marker = new google.maps.Marker({
+    //     position: myLatlng,
+    //     map: map,
+    //     title: 'Click to zoom'
+    // });
  
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: "Some Content"
     });
+    
+    // marker.addListener('click', function(){
+    //     infowindow.open(map, marker);
+    // });
 
     createMarkers();
 }
@@ -67,6 +77,7 @@ function initMap() {
 //define function here, call it inside initmap
 //can add event listeners here, but make results of listeners a separate function that gets called
 //by the listener
+
 function createMarkers() {
     for (var i = 0; i < vm.arrayOfAllMyLocations().length; i++) {
         var marker = new google.maps.Marker({
@@ -74,17 +85,27 @@ function createMarkers() {
             map: map,
             title: vm.arrayOfAllMyLocations()[i].name()
         });
-        marker.addListener('click', function(){
-            infowindow.open(map, this);
-        });
-        marker.addListener('click', function() {
-            //marker bounces once on click
-            this.setAnimation(google.maps.Animation.BOUNCE);
-            self = this
-            window.setTimeout(function() {
-               self.setAnimation(null);
-            }, 700);
-        });
+        marker.addListener('click', markerClick);
+        // marker.addListener('click', function(){
+        //     infowindow.open(map, this);
+        //     //marker bounces once on click
+        //     this.setAnimation(google.maps.Animation.BOUNCE);
+        //     self = this
+        //     window.setTimeout(function() {
+        //        self.setAnimation(null);
+        //     }, 700);
+        // });
         vm.arrayOfAllMyLocations()[i].marker = marker;
     }
 };  
+
+//this function opens info window and animates markers when clicked
+function markerClick() {
+    infowindow.open(map, this);
+    //marker bounces once on click
+    this.setAnimation(google.maps.Animation.BOUNCE);
+    self = this
+    window.setTimeout(function() {
+       self.setAnimation(null);
+    }, 700);
+};
