@@ -10,7 +10,7 @@
     <div id="list">
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: arrayOfAllMyLocations">
-            <li data-bind="text: name"></li>
+            <li data-bind="text: name, click: $parent.listItemClick"></li>
         </ul>    
     </div>
     <div id="map"></div>

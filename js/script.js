@@ -26,9 +26,26 @@ var ViewModel = function() {
     self.arrayOfAllMyLocations = ko.observableArray();
     data.forEach(function(location) {
         self.arrayOfAllMyLocations.push(new PlaceConstructor(location));
-        // you can also make all the markers here
-
     })
+    
+    //took function from 
+    //https://discussions.udacity.com/t/adding-click-event-to-list-item-and-open-infowindow/177224/3
+    self.listItemClick = function(marker) {
+    console.log(marker);
+    google.maps.event.trigger(this.marker, 'click');
+    };
+    //controls marker click behavior. goal was to have one function that marker and list clicks could both
+    //trigger, but couldn't figure it out, so i created a separate one, listItemClick
+    self.markerClick = function () {
+        infowindow.open(map, this);
+        //marker bounces once on click
+        this.setAnimation(google.maps.Animation.BOUNCE);
+        self = this
+        window.setTimeout(function() {
+           self.setAnimation(null);
+        }, 700);
+    };
+
     //define marker creation function here, call it inside initmap
     self.createMarkers = function() {
         for (var i = 0; i < vm.arrayOfAllMyLocations().length; i++) {
@@ -37,20 +54,11 @@ var ViewModel = function() {
             map: map,
             title: vm.arrayOfAllMyLocations()[i].name()
             });
-            marker.addListener('click', markerClick);
+            marker.addListener('click', vm.markerClick);
             vm.arrayOfAllMyLocations()[i].marker = marker;
         }
     }; 
-    //controls marker click behavior
-    function markerClick() {
-    infowindow.open(map, this);
-    //marker bounces once on click
-    this.setAnimation(google.maps.Animation.BOUNCE);
-    self = this
-    window.setTimeout(function() {
-       self.setAnimation(null);
-    }, 700);
-    };
+    
 
 };
 
