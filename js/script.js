@@ -58,7 +58,20 @@ var ViewModel = function() {
             vm.arrayOfAllMyLocations()[i].marker = marker;
         }
     }; 
-    
+    // filter the items using the filter text
+    // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+    //can't figure out how to make this work
+    // self.filteredItems = ko.computed(function() {
+    //     console.log(this);
+    //     var filter = this.filter().toLowerCase();
+    //     if (!filter) {
+    //         return this.items();
+    //     } else {
+    //         return ko.utils.arrayFilter(this.items(), function(item) {
+    //             return ko.utils.stringStartsWith(item.name().toLowerCase(), filter);
+    //         });
+    //     }
+    // }, ViewModel);
 
 };
 
