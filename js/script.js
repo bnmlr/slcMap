@@ -63,6 +63,12 @@ var ViewModel = function() {
     //can't figure out how to make this work
     // self.filteredItems = ko.computed(function() {
     //     console.log(this);
+    //     var stringStartsWith = function (string, startsWith) {          
+    //     string = string || "";
+    //     if (startsWith.length > string.length)
+    //     return false;
+    //     return string.substring(0, startsWith.length) === startsWith;
+    //     };
     //     var filter = this.filter().toLowerCase();
     //     if (!filter) {
     //         return this.items();
