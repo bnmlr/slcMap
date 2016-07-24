@@ -85,20 +85,18 @@ var vm = new ViewModel();
 ko.applyBindings(vm);
 
 function initMap() {
-    var myLatlng = {lat: 40.761353, lng: -111.891851};
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: myLatlng,
-        zoom: 13
-    });
-
-//this will allow me to set teh bounds of the map to wherever the markers are. look it up
-    bounds = new google.maps.LatLngBounds();
- 
+    map = new google.maps.Map(document.getElementById('map'));
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: "Some Content"
     });
 
     vm.createMarkers();
+
+    //set the bounds of the map to wherever the markers are
+    bounds = new google.maps.LatLngBounds();
+    vm.arrayOfAllMyLocations().forEach(function(item) {
+        bounds.extend(item.marker.getPosition());
+    });
+    map.fitBounds(bounds);
 };
