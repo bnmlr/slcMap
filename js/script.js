@@ -58,27 +58,34 @@ var ViewModel = function() {
             vm.arrayOfAllMyLocations()[i].marker = marker;
         }
     }; 
+
+    self.filter = ko.observable("");
     // filter the items using the filter text
     // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
     //can't figure out how to make this work
-    // self.filteredItems = ko.computed(function() {
-    //     console.log(this);
-    //     var stringStartsWith = function (string, startsWith) {          
-    //     string = string || "";
-    //     if (startsWith.length > string.length)
-    //     return false;
-    //     return string.substring(0, startsWith.length) === startsWith;
-    //     };
-    //     var filter = this.filter().toLowerCase();
-    //     if (!filter) {
-    //         return this.items();
-    //     } else {
-    //         return ko.utils.arrayFilter(this.items(), function(item) {
-    //             return ko.utils.stringStartsWith(item.name().toLowerCase(), filter);
-    //         });
-    //     }
-    // }, ViewModel);
+    self.filteredItems = ko.computed(function() {
+        console.log(self.filter());
 
+        var stringStartsWith = function (string, startsWith) {          
+            string = string || "";
+            if (startsWith.length > string.length)
+                return false;
+            return string.substring(0, startsWith.length) === startsWith;
+        };
+
+        // Get the value of the filter input
+        var filter = self.filter().toLowerCase();
+
+        if (!filter) {
+            // Return all locations
+            return self.arrayOfAllMyLocations();
+        } else {
+            return ko.utils.arrayFilter(self.arrayOfAllMyLocations(), function(item) {
+                console.log(item);
+                return stringStartsWith(item.name().toLowerCase(), filter);
+            });
+        }
+    });
 };
 
 var vm = new ViewModel();
