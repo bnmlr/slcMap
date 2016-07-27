@@ -40,9 +40,9 @@ var ViewModel = function() {
         infowindow.open(map, this);
         //marker bounces once on click
         this.setAnimation(google.maps.Animation.BOUNCE);
-        self = this
+        thisMarker = this
         window.setTimeout(function() {
-           self.setAnimation(null);
+           thisMarker.setAnimation(null);
         }, 700);
     };
 
@@ -64,7 +64,7 @@ var ViewModel = function() {
     // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
     //can't figure out how to make this work
     self.filteredItems = ko.computed(function() {
-        console.log(self.filter());
+        //console.log(self.filter());
 
         var stringStartsWith = function (string, startsWith) {          
             string = string || "";
@@ -80,17 +80,26 @@ var ViewModel = function() {
             // Return all locations
             return self.arrayOfAllMyLocations();
         } else {
+            //below is a function that allows us to pass in an array and control which items are 
+            //included in a new array based on the result of the function executed on each item
+            //of the original array that gets passed in
             return ko.utils.arrayFilter(self.arrayOfAllMyLocations(), function(item) {
-                console.log(item);
+                //console.log(item);
+                //below is the function that is executed on each item. it compares the
+                //name of the item to whatever is in the filter. if it's a match, it
+                //gets passed through to the filtered array. if it's not a match, it doesn't 
                 return stringStartsWith(item.name().toLowerCase(), filter);
             });
         }
     });
 };
 
+
 var vm = new ViewModel();
 ko.applyBindings(vm);
 
+
+console.log(vm.filteredItems());
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'));
  //create one infowindow and just switch out the content on clicks   
