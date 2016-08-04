@@ -61,10 +61,9 @@ var ViewModel = function() {
 
     self.filter = ko.observable("");
     // filter the items using the filter text
-    // based on http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-    //can't figure out how to make this work
+    // list is bound to self.filteredItems, which updates based on filter input
     self.filteredItems = ko.computed(function() {
-        //console.log(self.filter());
+        console.log(self.filter());
 
         var stringStartsWith = function (string, startsWith) {          
             string = string || "";
@@ -76,19 +75,36 @@ var ViewModel = function() {
         // Get the value of the filter input
         var filter = self.filter().toLowerCase();
 
+
+
         if (!filter) {
-            // Return all locations
+            // unhides hidden markers when filter is deleted
+            //if statement makes sure this doesn't run before there's a filtered list
+            if (typeof self.filteredItems == 'function' ) {
+                ko.utils.arrayForEach(self.arrayOfAllMyLocations(), function(item) {
+                    item.marker.setVisible(true);
+                });
+            };
             return self.arrayOfAllMyLocations();
         } else {
-            //below is a function that allows us to pass in an array and control which items are 
-            //included in a new array based on the result of the function executed on each item
-            //of the original array that gets passed in
+            //function allows us to pass in an array and control which items are 
+            //included in a new array based on the result of the function executed 
+            //on each item of the original array 
             return ko.utils.arrayFilter(self.arrayOfAllMyLocations(), function(item) {
-                //console.log(item);
-                //below is the function that is executed on each item. it compares the
-                //name of the item to whatever is in the filter. if it's a match, it
-                //gets passed through to the filtered array. if it's not a match, it doesn't 
-                return stringStartsWith(item.name().toLowerCase(), filter);
+                //compares name of each item in array to the
+                //string in the filter. if it's a match, it makes
+                //sure that item's marker is visible and the item
+                //gets passed through to the filtered array. if it's not a match, the marker
+                //is set to invisible and item isn't passed on to filtered array
+
+               if (stringStartsWith(item.name().toLowerCase(), filter)) {
+                    //not sure line below is necessary
+                    //item.marker.setVisible(true);
+                    return true
+               } else {
+                    item.marker.setVisible(false);
+                    return false
+               }
             });
         }
     });
