@@ -63,20 +63,9 @@ var ViewModel = function() {
     // filter the items using the filter text
     // list is bound to self.filteredItems, which updates based on filter input
     self.filteredItems = ko.computed(function() {
-        console.log(self.filter());
-
-        var stringStartsWith = function (string, startsWith) {          
-            string = string || "";
-            if (startsWith.length > string.length)
-                return false;
-            return string.substring(0, startsWith.length) === startsWith;
-        };
 
         // Get the value of the filter input
         var filter = self.filter().toLowerCase();
-
-
-
         if (!filter) {
             // unhides hidden markers when filter is deleted
             //if statement makes sure this doesn't run before there's a filtered list
@@ -97,9 +86,10 @@ var ViewModel = function() {
                 //gets passed through to the filtered array. if it's not a match, the marker
                 //is set to invisible and item isn't passed on to filtered array
 
-               if (stringStartsWith(item.name().toLowerCase(), filter)) {
+              if (item.name().toLowerCase().indexOf(filter) !== -1) {
+              //if (stringStartsWith(item.name().toLowerCase(), filter)) {
                     //not sure line below is necessary
-                    //item.marker.setVisible(true);
+                    item.marker.setVisible(true);
                     return true
                } else {
                     item.marker.setVisible(false);
