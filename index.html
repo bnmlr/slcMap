@@ -7,7 +7,9 @@
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
+    <h1>Park Finder</h1>
     <div id="list">
+        <p>City: <input value="Salt Lake City"/><p/>
         <p>Filter: <input data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: filteredItems">

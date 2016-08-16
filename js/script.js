@@ -1,6 +1,22 @@
 
 //code organization based on Heidi Kasemir gist w/ additional help from Ryan Vrba
 
+// var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22salt%20lake%20city,%20ut%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
+// $.getJSON(URL, function(data) {
+//     console.log(data);
+// });
+
+//example
+// https://api.foursquare.com/v2/venues/search
+//   ?client_id=CLIENT_ID
+//   &client_secret=CLIENT_SECRET
+//   &v=20130815
+//   &ll=40.7,-74
+//   &query=sushi
+
+//url for pioneer park
+//https://api.foursquare.com/v2/venues/search?ll=40.761771,-111.901073&limit=1&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812
+
 //model
 var data = [{
     name: "Liberty Park",
@@ -104,8 +120,6 @@ var ViewModel = function() {
 var vm = new ViewModel();
 ko.applyBindings(vm);
 
-
-console.log(vm.filteredItems());
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'));
  //create one infowindow and just switch out the content on clicks   
@@ -122,3 +136,20 @@ function initMap() {
     });
     map.fitBounds(bounds);
 };
+
+
+// var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
+// $.getJSON(URL, function(data) {
+//     console.log(data);
+// });
+
+//example
+// https://api.foursquare.com/v2/venues/search
+//   ?client_id=CLIENT_ID
+//   &client_secret=CLIENT_SECRET
+//   &v=20130815
+//   &ll=40.7,-74
+//   &query=sushi
+
+//url for pioneer park
+//https://api.foursquare.com/v2/venues/search?ll=40.761771,-111.901073&limit=1&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812
