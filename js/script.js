@@ -1,28 +1,19 @@
 
 //code organization based on Heidi Kasemir gist w/ additional help from Ryan Vrba
 
-//NOTE: code is a mess right now. in the middle of trying to replace hardcoded model
-// with data from foursquare. 
-//Ultimately  I'd like the app to show a map of top 10 parks 
-//in a given city using data from foursquare. Salt Lake City would be the default. 
-//User could then change the city.
-//The map and filtering worked when i had a hardcoded model. Issue I ran into when I added 
-//foursquare data was that request wasn't getting back in time to populate model before
-//building the vm. So now I'm trying to not create the vm until callback, but that's 
-//causing problems w/ init map. tried to initMap in callback too, but wouldn't work.
-//Seems like trying to make everything wait until ajax response is returned defeats the purpose
-//of an asynchronous request, but I'm not sure how else to get the data.
-
 var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22salt%20lake%20city,%20ut%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
 var placeData = [];
 
  
 $.getJSON(fourSquareURL, function(data) {
-    placeData = data.response.venues
-    //trying to initialize the viewodel in the success callback to make sure data is recieved before vm is built
-    console.log("1");
-    vm = new ViewModel();
-    ko.applyBindings(vm);
+    placeData = data.response.venues;
+    // Create map markers using location data
+    vm.createMarkers(placeData);
+    bounds = new google.maps.LatLngBounds();
+    vm.arrayOfAllMyLocations().forEach(function(item) {
+        bounds.extend(item.marker.getPosition());
+    });
+    map.fitBounds(bounds);
 });
 
 
@@ -43,26 +34,31 @@ var vm,
     infowindow,
     bounds;
 
-var PlaceConstructor = function(dataObj){
-  this.name = ko.observable(dataObj.name)
-  //wil have to update marker function now that lat and lng are separate
-  this.pos = ko.observable(dataObj.location.lat)
-  this.lng = ko.observable(dataObj.location.lng)
-  this.address = ko.observable(dataObj.location.address)
+var PlaceConstructor = function(dataObj) {
+    this.name = dataObj.name;
+    this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
+    this.address = dataObj.location.address;
+    var marker = new google.maps.Marker({
+                //will need to update position now that lat and lng are separate, no more sing pos
+                position: {lat: dataObj.location.lat, lng: dataObj.location.lng}, 
+                map: map,
+                title: dataObj.name
+            });
+            marker.addListener('click', vm.markerClick);
+    this.marker = marker;
 }
 
 var ViewModel = function() {
-    console.log("2");
     var self = this;
     self.arrayOfAllMyLocations = ko.observableArray();
-    placeData.forEach(function(location) {
+    /*placeData.forEach(function(location) {
         self.arrayOfAllMyLocations.push(new PlaceConstructor(location));
-    })
+    })*/
     
     //took function from 
     //https://discussions.udacity.com/t/adding-click-event-to-list-item-and-open-infowindow/177224/3
     self.listItemClick = function(marker) {
-    google.maps.event.trigger(this.marker, 'click');
+        google.maps.event.trigger(this.marker, 'click');
     };
     //controls marker click behavior. goal was to have one function that marker and list clicks could both
     //trigger, but couldn't figure it out, so i created a separate one, listItemClick
@@ -77,17 +73,32 @@ var ViewModel = function() {
     };
 
     //define marker creation function here, call it inside initmap
-    self.createMarkers = function() {
-        console.log("3");
-        for (var i = 0; i < vm.arrayOfAllMyLocations().length; i++) {
-            var marker = new google.maps.Marker({
+    self.createMarkers = function(data) {
+        for (var i = 0; i < data.length; i++) {
+            console.log(data[i]);
+
+
+            // Create a new PlaceConstructor object for each Foursquare result
+            // And push the object to the 'self.arrayOfAllMyLocations' observable array
+            self.arrayOfAllMyLocations.push(new PlaceConstructor(data[i]));
+
+            // Create a Map Marker using the PlaceConstructor object
+            // You could also create the map marker directly inside the PlaceConstructor function
+
+            /*var marker = new google.maps.Marker({
                 //will need to update position now that lat and lng are separate, no more sing pos
-            position: vm.arrayOfAllMyLocations()[i].pos(), 
-            map: map,
-            title: vm.arrayOfAllMyLocations()[i].name()
+                position: vm.arrayOfAllMyLocations()[i].pos(), 
+                map: map,
+                title: vm.arrayOfAllMyLocations()[i].name()
             });
             marker.addListener('click', vm.markerClick);
-            vm.arrayOfAllMyLocations()[i].marker = marker;
+
+            /*
+             * I recommend creating the markers before pushing the locations to the observable array
+             * One method is creating the markers inside the PlaceConstructor function
+             * Another would be creating the PlaceConstructor location object, then creating the marker, then pushing
+             * the location object once you are finished with all data manipulation
+             */
         }
     }; 
 
@@ -132,25 +143,22 @@ var ViewModel = function() {
     });
 };
 
-
-
-
-//issue I'm running into is that map depends on vm which isn't built in time.
-//tried to initialize map in ajax success callback but it wasn't working.
 function initMap() {
-    console.log("4");
-    map = new google.maps.Map(document.getElementById('map'));
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 40.7767168, lng: -111.9905249},
+        zoom: 12
+        });
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: "Some Content"
     });
 
-    vm.createMarkers();
+    // Create ViewModel and apply Knockout bindings
+    vm = new ViewModel();
+    ko.applyBindings(vm);
 
     //set the bounds of the map to wherever the markers are
-    bounds = new google.maps.LatLngBounds();
-    vm.arrayOfAllMyLocations().forEach(function(item) {
-        bounds.extend(item.marker.getPosition());
-    });
-    map.fitBounds(bounds);
+    // You might want to initialize the bounces object in the success function of the Foursquare request instead
+    // This way, it will be reset each time new locations are loaded
+    
 };
