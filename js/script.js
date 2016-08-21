@@ -1,19 +1,32 @@
 
 //code organization based on Heidi Kasemir gist w/ additional help from Ryan Vrba
 
-var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22salt%20lake%20city,%20ut%22&limit=5&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
-var placeData = [];
-//Get foursquare data
-$.getJSON(fourSquareURL, function(data) {
-    placeData = data.response.venues;
-    //Create loations once foursquare data is received
-    vm.createLocations(placeData);
-    //Set bounds of map to markers
-    bounds = new google.maps.LatLngBounds();
-    vm.arrayOfAllMyLocations().forEach(function(item) {
-        bounds.extend(item.marker.getPosition());
+var dataRequest = function(city) {
+    city = $("#cityInput").val();
+    encodedCity = encodeURIComponent(city);
+    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=5&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
+    var placeData = [];
+    //Get foursquare data
+    $.getJSON(fourSquareURL, function(data) {
+        placeData = data.response.venues;
+        //Create loations once foursquare data is received
+        vm.arrayOfAllMyLocations([])
+        vm.createLocations(placeData);
+        //Set bounds of map to markers
+        bounds = new google.maps.LatLngBounds();
+        vm.arrayOfAllMyLocations().forEach(function(item) {
+            bounds.extend(item.marker.getPosition());
+        });
+        map.fitBounds(bounds);
     });
-    map.fitBounds(bounds);
+};
+
+dataRequest();
+
+$("#cityInput").keypress(function(e) {
+    if(e.keyCode == 13) {
+        dataRequest();
+    }
 });
 
 var vm,
@@ -38,7 +51,7 @@ var LocationConstructor = function(dataObj) {
             });
             marker.addListener('click', vm.markerClick);
     this.marker = marker;
-}
+};
 
 var ViewModel = function() {
     var self = this;

@@ -9,7 +9,8 @@
 <body>
     <h1>Park Finder</h1>
     <div id="list">
-        <p>City: <input value="Salt Lake City"></p>
+        <p>City: <input id="cityInput" value="Salt Lake City, UT"></p>
+        <input type="button" value="Find Me Some Parks" onClick="dataRequest()">
         <p>Filter: <input data-bind="value: filter, valueUpdate: 'afterkeydown'"></p>
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: filteredItems">
