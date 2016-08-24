@@ -4,10 +4,11 @@
 var dataRequest = function(city) {
     city = $("#cityInput").val();
     encodedCity = encodeURIComponent(city);
-    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=5&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
+    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
     var placeData = [];
     //Get foursquare data
     $.getJSON(fourSquareURL, function(data) {
+
         placeData = data.response.venues;
         //Create loations once foursquare data is received
         vm.arrayOfAllMyLocations([])
@@ -18,7 +19,10 @@ var dataRequest = function(city) {
             bounds.extend(item.marker.getPosition());
         });
         map.fitBounds(bounds);
-    });
+    })
+    .fail(function() {
+            window.alert("Data request failed. Check your internet connection and try again later.");
+        });
 };
 
 dataRequest();
