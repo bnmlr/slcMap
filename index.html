@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Simple Map</title>
-  <meta name="viewport" content="initial-scale=1.0">
+  <title>Park Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Park Finder</h1>
     <div id="list">
         <p>City: <input id="cityInput" value="Salt Lake City, UT"></p>
         <input type="button" value="Find Me Some Parks" onClick="dataRequest()">
@@ -16,9 +15,13 @@
         <ul id="locationList" data-bind="foreach: filteredItems">
             <li data-bind="text: name, click: $parent.listItemClick"></li>
         </ul>    
+        <p>Data provided by <a href="https://developer.foursquare.com/start">Foursquare</a></p>
     </div>
-    <p>Data provided by <a href="https://developer.foursquare.com/start">Foursquare<a></p>
-    <div id="map"></div>
+    <div id="page">
+        <h1>Park Finder</h1>
+        <a href="#" id="toggle-menu">Menu</a>
+        <div id="map"></div>
+    </div>
     <script src='js/libs/knockout-3.4.0.js'></script>
     <script src="js/libs/jquery.min.js"></script>
     <script src="js/script.js"></script>
