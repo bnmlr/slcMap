@@ -4,13 +4,14 @@ body {
   margin: 0;
   padding: 0;
   background: #333;
+  font-family: Arial;
 }
 
 #page {
 	position: relative; /* Set the position property so z-index will apply */
 	z-index: 20; /* Make sure this is higher than #menu */
 	padding: 20px;
-	background: #fff;
+	background: white;
 	height: 100%;
 }
 
@@ -18,10 +19,15 @@ body {
 	margin: 0;
 }
 
+#page p {
+	margin-bottom: 3px;
+}
+
 #toggle-menu {
-	position: absolute;
-	top: 10px;
-	right: 10px;
+	border-style: solid;
+	border-width: thin;
+	border-color: black;
+	float: right;
 }
 
 #list {
@@ -44,12 +50,13 @@ body {
 	display: block;
 	color: #fff;
 	padding: 15px 0;
-	border-bottom: 1px solid rgba( 255, 255, 255, 0.05 );
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #map {
   height: 100%;
-  width: 75%;
+  width: 100%;
+  border:1px solid black;
 }
 
 .animating #list, .menu-visible #list {
@@ -95,9 +102,36 @@ body {
   right: 240px;
 }
 
-
-
 #page, #list {
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
+}
+
+#buttonList {
+	list-style: none;
+	padding: 0px;
+	font-size: 14px;
+}
+
+input {
+	font-size: 14px;
+}
+
+#buttonList li {
+	display: inline;
+}
+
+.button {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    border-color: black;
+    border-width: thin;
+    padding: 10px;
+}
+
+.button:hover {
+    background: black;
+    color: white;
 }

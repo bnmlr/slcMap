@@ -8,9 +8,8 @@
 </head>
 <body>
     <div id="list">
-        <p>City: <input id="cityInput" value="Salt Lake City, UT"></p>
-        <input type="button" value="Find Me Some Parks" onClick="dataRequest()">
-        <p>Filter: <input data-bind="value: filter, valueUpdate: 'afterkeydown'"></p>
+        
+        <p>Filter<input data-bind="value: filter, valueUpdate: 'afterkeydown'"></p>
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: filteredItems">
             <li data-bind="text: name, click: $parent.listItemClick"></li>
@@ -19,7 +18,12 @@
     </div>
     <div id="page">
         <h1>Park Finder</h1>
-        <a href="#" id="toggle-menu">Menu</a>
+        <p>City</p>
+        <input id="cityInput" value="Salt Lake City, UT">
+        <ul id="buttonList">
+          <li><input type="button" value="Find Me Some Parks" class="button" onClick="dataRequest()"></li>
+          <li><a href="#" class="button" id="toggle-menu">Filter</a></li>
+        </ul>
         <div id="map"></div>
     </div>
     <script src='js/libs/knockout-3.4.0.js'></script>
