@@ -134,6 +134,12 @@ function initMap() {
     infowindow = new google.maps.InfoWindow({
         content: "Some Content"
     });
+//resize/recenter map when window changes
+    google.maps.event.addDomListener(window, "resize", function() {
+            var center = map.getCenter();
+            google.maps.event.trigger(map, "resize");
+            map.setCenter(center);
+        });
 
     // Create ViewModel and apply Knockout bindings
     vm = new ViewModel();
