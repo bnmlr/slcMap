@@ -9,7 +9,7 @@
 <body>
     <div id="list">
         
-        <p>Filter<input data-bind="value: filter, valueUpdate: 'afterkeydown'"></p>
+        <input data-bind="value: filter, valueUpdate: 'afterkeydown'" placeholder="Filter">
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: filteredItems">
             <li data-bind="text: name, click: $parent.listItemClick"></li>
@@ -18,7 +18,6 @@
     </div>
     <div id="page">
         <h1>Park Finder</h1>
-        <!-- <p>City</p> -->
         <input id="cityInput" value="Salt Lake City, UT" placeholder="City">
         <ul id="buttonList">
           <li><input type="button" value="Find Me Some Parks" class="button" onClick="dataRequest()"></li>
