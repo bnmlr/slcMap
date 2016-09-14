@@ -4,14 +4,14 @@
 var dataRequest = function(city) {
     city = $("#cityInput").val();
     encodedCity = encodeURIComponent(city);
-    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812'
+    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
     var placeData = [];
     //Get foursquare data
     $.getJSON(fourSquareURL, function(data) {
 
         placeData = data.response.venues;
         //Create loations once foursquare data is received
-        vm.arrayOfAllMyLocations([])
+        vm.arrayOfAllMyLocations([]);
         vm.createLocations(placeData);
         //Set bounds of map to markers
         bounds = new google.maps.LatLngBounds();
@@ -44,7 +44,7 @@ var LocationConstructor = function(dataObj) {
     this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
     if (typeof dataObj.location.address === "undefined") {
         dataObj.location.address = "Not available";
-    };
+    }
     this.address = dataObj.location.address;
     //creates a marker for each location
     var marker = new google.maps.Marker({
@@ -71,7 +71,7 @@ var ViewModel = function() {
         infowindow.open(map, this);
         //marker bounces once on click
         this.setAnimation(google.maps.Animation.BOUNCE);
-        thisMarker = this
+        thisMarker = this;
         window.setTimeout(function() {
            thisMarker.setAnimation(null);
         }, 700);
@@ -98,7 +98,7 @@ var ViewModel = function() {
                 ko.utils.arrayForEach(self.arrayOfAllMyLocations(), function(item) {
                     item.marker.setVisible(true);
                 });
-            };
+            }
             return self.arrayOfAllMyLocations();
         } else {
             //ko array filter function allows us to pass in an array and control which items are 
@@ -114,11 +114,11 @@ var ViewModel = function() {
 
               if (item.name.toLowerCase().indexOf(filter) !== -1) {
                     item.marker.setVisible(true);
-                    return true
+                    return true;
                } else {
                     item.marker.setVisible(false);
                     infowindow.close();
-                    return false
+                    return false;
                }
             });
         }
@@ -144,7 +144,7 @@ function initMap() {
     // Create ViewModel and apply Knockout bindings
     vm = new ViewModel();
     ko.applyBindings(vm);
-};
+}
 
 //sliding menu code from https://apeatling.com/2014/01/building-smooth-sliding-mobile-menu/
 (function($) {

@@ -7,6 +7,9 @@ body {
   font-family: Arial;
 }
 
+/*Styles and comments for sliding menu from 
+https://apeatling.com/2014/01/building-smooth-sliding-mobile-menu/*/
+
 #page {
 	position: relative; /* Set the position property so z-index will apply */
 	z-index: 20; /* Make sure this is higher than #menu */
@@ -21,13 +24,6 @@ body {
 
 #page p {
 	margin-bottom: 3px;
-}
-
-#toggle-menu {
-	border-style: solid;
-	border-width: thin;
-	border-color: black;
-	float: right;
 }
 
 #list {
@@ -134,4 +130,11 @@ input {
 .button:hover {
     background: black;
     color: white;
+}
+
+#toggle-menu {
+	border-style: solid;
+	border-width: thin;
+	border-color: black;
+	float: right;
 }
