@@ -18,11 +18,13 @@
     </div>
     <div id="page">
         <h1>Park Finder</h1>
-        <input id="cityInput" value="Salt Lake City, UT" placeholder="City">
-        <ul id="buttonList">
-          <li><input type="button" value="Find Me Some Parks" class="button" onClick="dataRequest()"></li>
-          <li><a href="#" class="button" id="toggle-menu">Filter</a></li>
-        </ul>
+        <form data-bind="submit: dataRequest">
+          <input id="cityInput" value="Salt Lake City, UT" placeholder="City" data-bind="value: city, valueUpdate: 'afterkeydown'">
+          <ul id="buttonList">
+            <li><input type="button" value="Find Me Some Parks" class="button" data-bind="click: dataRequest"></li>
+            <li><a href="#" class="button" id="toggle-menu">Filter</a></li>
+          </ul>
+        </form>
         <div id="map"></div>
     </div>
     <script src='js/libs/knockout-3.4.0.js'></script>

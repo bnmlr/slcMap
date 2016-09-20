@@ -1,45 +1,16 @@
 
 //code organization based on Heidi Kasemir gist w/ additional help from Ryan Vrba
 
-var dataRequest = function(city) {
-    city = $("#cityInput").val();
-    encodedCity = encodeURIComponent(city);
-    var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
-    var placeData = [];
-    //Get foursquare data
-    $.getJSON(fourSquareURL, function(data) {
-
-        placeData = data.response.venues;
-        //Create loations once foursquare data is received
-        vm.arrayOfAllMyLocations([]);
-        vm.createLocations(placeData);
-        //Set bounds of map to markers
-        bounds = new google.maps.LatLngBounds();
-        vm.arrayOfAllMyLocations().forEach(function(item) {
-            bounds.extend(item.marker.getPosition());
-        });
-        map.fitBounds(bounds);
-    })
-    .fail(function() {
-            window.alert("Data request failed. Check your internet connection and try again later.");
-        });
-};
-
-dataRequest();
-
-$("#cityInput").keypress(function(e) {
-    if(e.keyCode == 13) {
-        dataRequest();
-    }
-});
 
 var vm,
     map,
     infowindow,
     bounds;
+    console.log("declaringVariables");
 
 //Builds out each location with data from foursquare
 var LocationConstructor = function(dataObj) {
+    console.log("LocationConstructor");
     this.name = dataObj.name;
     this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
     if (typeof dataObj.location.address === "undefined") {
@@ -58,7 +29,38 @@ var LocationConstructor = function(dataObj) {
 };
 
 var ViewModel = function() {
+    console.log("viewModel");
     var self = this;
+    //creates observable bound to the city input, with Salt Lake as default value
+    self.city = ko.observable("Salt Lake City, UT");
+    //data request function
+    self.dataRequest = function(city) {
+        console.log("data request");
+        city = $("#cityInput").val();
+        encodedCity = encodeURIComponent(city);
+        var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
+        var placeData = [];
+        //Get foursquare data
+        $.getJSON(fourSquareURL, function(data) {
+
+            placeData = data.response.venues;
+            //Create loations once foursquare data is received
+            vm.arrayOfAllMyLocations([]);
+            console.log("dataRequestSuccess");
+            vm.createLocations(placeData);
+            //Set bounds of map to markers
+            bounds = new google.maps.LatLngBounds();
+            vm.arrayOfAllMyLocations().forEach(function(item) {
+                bounds.extend(item.marker.getPosition());
+            });
+            map.fitBounds(bounds);
+        })
+        .fail(function() {
+                window.alert("Data request failed. Check your internet connection and try again later.");
+            });
+    };
+
+    self.dataRequest();
     self.arrayOfAllMyLocations = ko.observableArray();
     //took function from 
     //https://discussions.udacity.com/t/adding-click-event-to-list-item-and-open-infowindow/177224/3
@@ -84,6 +86,7 @@ var ViewModel = function() {
         }
     }; 
 
+    //creates an observable that is bound to the filter input
     self.filter = ko.observable("");
     // filters the items using the filter text
     // list is bound to self.filteredItems, which updates based on filter input
@@ -126,6 +129,7 @@ var ViewModel = function() {
 };
 
 function initMap() {
+    console.log("initMap");
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 40.7767168, lng: -111.9905249},
         zoom: 12
@@ -143,7 +147,10 @@ function initMap() {
 
     // Create ViewModel and apply Knockout bindings
     vm = new ViewModel();
+    console.log("newVM");
     ko.applyBindings(vm);
+    console.log("applyBindings");
+
 }
 
 //sliding menu code from https://apeatling.com/2014/01/building-smooth-sliding-mobile-menu/
