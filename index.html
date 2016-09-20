@@ -15,10 +15,9 @@
         <ul id="locationList" data-bind="foreach: filteredItems">
             <li data-bind="text: name, click: $parent.listItemClick"></li>
         </ul>    
-        <p>Data provided by <a href="https://developer.foursquare.com/start">Foursquare</a></p>
+        <p>Data provided by <a href="https://developer.foursquare.com/start" target="_blank">Foursquare</a></p>
       </div>
     </aside>
-    <main>
       <div id="page">
         <h1>Park Finder</h1>
         <form data-bind="submit: dataRequest">
@@ -30,7 +29,6 @@
         </form>
         <div id="map"></div>
       </div>
-    </main>
     <script src='js/libs/knockout-3.4.0.js'></script>
     <script src="js/libs/jquery.min.js"></script>
     <script src="js/script.js"></script>

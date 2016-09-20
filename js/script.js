@@ -153,6 +153,10 @@ function initMap() {
 
 }
 
+function googleError() {
+     window.alert("Google Maps data request failed. Try again later.");
+};
+
 //sliding menu code from https://apeatling.com/2014/01/building-smooth-sliding-mobile-menu/
 (function($) {
  /*** 
