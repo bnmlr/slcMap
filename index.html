@@ -8,16 +8,18 @@
   <link rel="shortcut icon" type="image/png" href="img/favicon.png">
 </head>
 <body>
-    <div id="list">
-        
+    <aside>
+      <div id="list">
         <input data-bind="value: filter, valueUpdate: 'afterkeydown'" placeholder="Filter">
         <h3>Locations</h3>
         <ul id="locationList" data-bind="foreach: filteredItems">
             <li data-bind="text: name, click: $parent.listItemClick"></li>
         </ul>    
         <p>Data provided by <a href="https://developer.foursquare.com/start">Foursquare</a></p>
-    </div>
-    <div id="page">
+      </div>
+    </aside>
+    <main>
+      <div id="page">
         <h1>Park Finder</h1>
         <form data-bind="submit: dataRequest">
           <input id="cityInput" value="Salt Lake City, UT" placeholder="City" data-bind="value: city, valueUpdate: 'afterkeydown'">
@@ -27,7 +29,8 @@
           </ul>
         </form>
         <div id="map"></div>
-    </div>
+      </div>
+    </main>
     <script src='js/libs/knockout-3.4.0.js'></script>
     <script src="js/libs/jquery.min.js"></script>
     <script src="js/script.js"></script>
