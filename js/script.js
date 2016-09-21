@@ -6,15 +6,13 @@ var vm,
     map,
     infowindow,
     bounds;
-    console.log("declaringVariables");
 
 //Builds out each location with data from foursquare
-var LocationConstructor = function(dataObj) {
-    console.log("LocationConstructor");
+var Location = function(dataObj) {
     this.name = dataObj.name;
     this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
-    if (typeof dataObj.location.address === "undefined") {
-        dataObj.location.address = "Not available";
+    if (typeof dataObj.location.address === 'undefined') {
+        dataObj.location.address = 'Not available';
     }
     this.address = dataObj.location.address;
     //creates a marker for each location
@@ -22,31 +20,26 @@ var LocationConstructor = function(dataObj) {
                 position: {lat: dataObj.location.lat, lng: dataObj.location.lng}, 
                 map: map,
                 title: dataObj.name,
-                content: dataObj.name + "<br>" + "Address: " + dataObj.location.address
+                content: dataObj.name + '<br>' + 'Address: ' + dataObj.location.address
             });
             marker.addListener('click', vm.markerClick);
     this.marker = marker;
 };
 
 var ViewModel = function() {
-    console.log("viewModel");
     var self = this;
     //creates observable bound to the city input, with Salt Lake as default value
-    self.city = ko.observable("Salt Lake City, UT");
+    self.city = ko.observable('Salt Lake City, UT');
     //data request function
-    self.dataRequest = function(city) {
-        console.log("data request");
-        city = $("#cityInput").val();
-        encodedCity = encodeURIComponent(city);
+    self.dataRequest = function() {
+        encodedCity = encodeURIComponent(self.city());
         var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
         var placeData = [];
         //Get foursquare data
         $.getJSON(fourSquareURL, function(data) {
-
             placeData = data.response.venues;
             //Create loations once foursquare data is received
             vm.arrayOfAllMyLocations([]);
-            console.log("dataRequestSuccess");
             vm.createLocations(placeData);
             //Set bounds of map to markers
             bounds = new google.maps.LatLngBounds();
@@ -56,7 +49,7 @@ var ViewModel = function() {
             map.fitBounds(bounds);
         })
         .fail(function() {
-                window.alert("Data request failed. Check your internet connection and try again later.");
+                window.alert('Data request failed. Check your internet connection and try again later.');
             });
     };
 
@@ -82,12 +75,12 @@ var ViewModel = function() {
     //function creates locations and builds observable array of locations. initialized on ajax success
     self.createLocations = function(data) {
         for (var i = 0; i < data.length; i++) {
-            self.arrayOfAllMyLocations.push(new LocationConstructor(data[i]));
+            self.arrayOfAllMyLocations.push(new Location(data[i]));
         }
     }; 
 
     //creates an observable that is bound to the filter input
-    self.filter = ko.observable("");
+    self.filter = ko.observable('');
     // filters the items using the filter text
     // list is bound to self.filteredItems, which updates based on filter input
     self.filteredItems = ko.computed(function() {
@@ -129,32 +122,28 @@ var ViewModel = function() {
 };
 
 function initMap() {
-    console.log("initMap");
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 40.7767168, lng: -111.9905249},
         zoom: 12
         });
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
-        content: "Some Content"
+        content: 'Some Content'
     });
 //resize/recenter map when window changes
-    google.maps.event.addDomListener(window, "resize", function() {
+    google.maps.event.addDomListener(window, 'resize', function() {
             var center = map.getCenter();
-            google.maps.event.trigger(map, "resize");
+            google.maps.event.trigger(map, 'resize');
             map.setCenter(center);
         });
 
     // Create ViewModel and apply Knockout bindings
     vm = new ViewModel();
-    console.log("newVM");
     ko.applyBindings(vm);
-    console.log("applyBindings");
-
 }
 
 function googleError() {
-     window.alert("Google Maps data request failed. Try again later.");
+     window.alert('Google Maps data request failed. Try again later.');
 };
 
 //sliding menu code from https://apeatling.com/2014/01/building-smooth-sliding-mobile-menu/
@@ -170,7 +159,7 @@ function googleError() {
       $page = $('#page'),
       $menu = $('#list'),
  
-      /* Cross browser support for CSS "transition end" event */
+      /* Cross browser support for CSS 'transition end' event */
       transitionEnd = 'transitionend webkitTransitionEnd otransitionend MSTransitionEnd';
  
   /* When the toggle menu link is clicked, animation starts */
@@ -190,7 +179,7 @@ function googleError() {
   /***
    * When the animation (technically a CSS transition)
    * has finished, remove all animating classes and
-   * either add or remove the "menu-visible" class 
+   * either add or remove the 'menu-visible' class 
    * depending whether it was visible or not previously.
    */
   $page.on(transitionEnd, function() {
