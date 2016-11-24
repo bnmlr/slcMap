@@ -23,6 +23,12 @@ var Location = function(dataObj) {
                 content: dataObj.name + '<br>' + 'Address: ' + dataObj.location.address
             });
             marker.addListener('click', vm.markerClick);
+    var circle = new google.maps.Circle({
+        map: map,
+        radius: 805,
+        fillColor: '#AA0000'
+    });
+    circle.bindTo('center', marker, 'position');
     this.marker = marker;
 };
 
@@ -33,9 +39,11 @@ var ViewModel = function() {
     //data request function
     self.dataRequest = function() {
         encodedCity = encodeURIComponent(self.city());
-        var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=10&radius=8046.72&categoryId=4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
+        var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=20&radius=8046.72&categoryId=4bf58dd8d48988d118951735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
+        //4bf58dd8d48988d163941735 (park id)
         var placeData = [];
         //Get foursquare data
+        console.log(fourSquareURL);
         $.getJSON(fourSquareURL, function(data) {
             placeData = data.response.venues;
             //Create loations once foursquare data is received
@@ -124,7 +132,7 @@ var ViewModel = function() {
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 40.7767168, lng: -111.9905249},
-        zoom: 12
+        zoom: 15
         });
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
