@@ -15,6 +15,8 @@ var Location = function(dataObj) {
         dataObj.location.address = 'Not available';
     }
     this.address = dataObj.location.address;
+    //console.log(dataObj.categories[0].id);
+    this.category = dataObj.categories[0].name;
     //creates a marker for each location
     var marker = new google.maps.Marker({
                 position: {lat: dataObj.location.lat, lng: dataObj.location.lng}, 
@@ -23,13 +25,26 @@ var Location = function(dataObj) {
                 content: dataObj.name + '<br>' + 'Address: ' + dataObj.location.address
             });
             marker.addListener('click', vm.markerClick);
-    var circle = new google.maps.Circle({
+    console.log(this.category);
+    if (this.category === "Grocery Store" || this.category === "Health Food Store" || this.category === "Supermarket" || this.category === "Gas Station") {
+      var circleRed = new google.maps.Circle({
         map: map,
         radius: 805,
         fillColor: '#AA0000'
-    });
-    circle.bindTo('center', marker, 'position');
+      });
+      circleRed.bindTo('center', marker, 'position');
+    } else {
+      console.log("false");
+      var circleYellow = new google.maps.Circle({
+        map: map,
+        radius: 805,
+        fillColor: '#ffff00'
+      });
+      circleYellow.bindTo('center', marker, 'position');
+
+    }
     this.marker = marker;
+    
 };
 
 var ViewModel = function() {
@@ -39,7 +54,7 @@ var ViewModel = function() {
     //data request function
     self.dataRequest = function() {
         encodedCity = encodeURIComponent(self.city());
-        var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=20&radius=8046.72&categoryId=4bf58dd8d48988d118951735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
+        var fourSquareURL = 'https://api.foursquare.com/v2/venues/search?near=%22' + encodedCity + '%22&limit=20&radius=8046.72&categoryId=4bf58dd8d48988d118951735,4bf58dd8d48988d163941735&client_id=N4151NYLOJ3FQ0GYHUZ4O0OTKNAKX3NW2PJY1HH2503G35WU&client_secret=ALHWZESIYI1MWFX51A0FEKDWNTAKJNFQFHISRSJZM1TUZTAD&v=20160812';
         //4bf58dd8d48988d163941735 (park id)
         var placeData = [];
         //Get foursquare data
@@ -131,9 +146,11 @@ var ViewModel = function() {
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 40.7767168, lng: -111.9905249},
+        center: {lat: 40.7258126, lng: -112.0502941},
         zoom: 15
         });
+    var transitLayer = new google.maps.TransitLayer();
+        transitLayer.setMap(map);
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: 'Some Content'
