@@ -151,6 +151,11 @@ function initMap() {
         });
     var transitLayer = new google.maps.TransitLayer();
         transitLayer.setMap(map);
+    var geocoder = new google.maps.Geocoder();
+
+        document.getElementById('submit').addEventListener('click', function() {
+          geocodeAddress(geocoder, map);
+        });
  //create one infowindow and just switch out the content on clicks   
     infowindow = new google.maps.InfoWindow({
         content: 'Some Content'
@@ -167,6 +172,20 @@ function initMap() {
     ko.applyBindings(vm);
 }
 
+function geocodeAddress(geocoder, resultsMap) {
+var address = document.getElementById('address').value;
+geocoder.geocode({'address': address}, function(results, status) {
+  if (status === 'OK') {
+    resultsMap.setCenter(results[0].geometry.location);
+    var marker = new google.maps.Marker({
+      map: resultsMap,
+      position: results[0].geometry.location
+    });
+  } else {
+    alert('Geocode was not successful for the following reason: ' + status);
+  }
+});
+}
 function googleError() {
      window.alert('Google Maps data request failed. Try again later.');
 }
