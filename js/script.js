@@ -9,6 +9,7 @@ var vm,
 
 //Builds out each location with data from foursquare
 var Location = function(dataObj) {
+	console.log(dataObj);
     this.name = dataObj.name;
     this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
     if (typeof dataObj.location.address === 'undefined') {
@@ -16,6 +17,8 @@ var Location = function(dataObj) {
     }
     this.address = dataObj.location.address;
     this.category = dataObj.categories[0].name;
+    var picnicIcon = 'https://bnmlr.github.io/slcMap/img/picnic-table-silhouette.png';
+    var storeIcon = 'https://bnmlr.github.io/slcMap/img/supermarket-cart.png';
     var marker = new google.maps.Marker({
                 position: {lat: dataObj.location.lat, lng: dataObj.location.lng}, 
                 map: map,
@@ -24,6 +27,7 @@ var Location = function(dataObj) {
             });
             marker.addListener('click', vm.markerClick);
     if (this.category === "Grocery Store" || this.category === "Health Food Store" || this.category === "Supermarket" || this.category === "Gas Station") {
+      marker.icon = storeIcon;
       var circleRed = new google.maps.Circle({
         map: map,
         radius: 805,
@@ -31,6 +35,7 @@ var Location = function(dataObj) {
       });
       circleRed.bindTo('center', marker, 'position');
     } else {
+      marker.icon = picnicIcon;
       var circleYellow = new google.maps.Circle({
         map: map,
         radius: 805,
@@ -176,7 +181,7 @@ function geocodeAddress(geocoder, map) {
 	  if (status === 'OK') {
 	    map.setCenter(results[0].geometry.location);
 	    map.setZoom(15);
-	    var houseIcon = 'https://bnmlr.github.io/slcMap/img/home.svg';
+	    var houseIcon = 'https://bnmlr.github.io/slcMap/img/home.png';
 	    var marker = new google.maps.Marker({
 	      map: map,
 	      position: results[0].geometry.location,
