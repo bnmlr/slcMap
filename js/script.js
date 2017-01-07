@@ -176,9 +176,11 @@ function geocodeAddress(geocoder, map) {
 	  if (status === 'OK') {
 	    map.setCenter(results[0].geometry.location);
 	    map.setZoom(15);
+	    var houseIcon = 'https://bnmlr.github.io/slcMap/img/ic_home_black_24px.svg';
 	    var marker = new google.maps.Marker({
 	      map: map,
-	      position: results[0].geometry.location
+	      position: results[0].geometry.location,
+	      icon: houseIcon
 	    });
 	  } else {
 	    alert('Geocode was not successful for the following reason: ' + status);
