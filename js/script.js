@@ -9,7 +9,6 @@ var vm,
 
 //Builds out each location with data from foursquare
 var Location = function(dataObj) {
-	console.log(dataObj);
     this.name = dataObj.name;
     this.pos = {lat: dataObj.location.lat, lng: dataObj.location.lng};
     if (typeof dataObj.location.address === 'undefined') {
@@ -27,7 +26,8 @@ var Location = function(dataObj) {
             });
             marker.addListener('click', vm.markerClick);
     if (this.category === "Grocery Store" || this.category === "Health Food Store" || this.category === "Supermarket" || this.category === "Gas Station") {
-      marker.icon = storeIcon;
+      marker.setIcon(storeIcon);
+      //marker.icon = storeIcon;
       var circleRed = new google.maps.Circle({
         map: map,
         radius: 805,
@@ -35,7 +35,7 @@ var Location = function(dataObj) {
       });
       circleRed.bindTo('center', marker, 'position');
     } else {
-      marker.icon = picnicIcon;
+      marker.setIcon(picnicIcon);
       var circleYellow = new google.maps.Circle({
         map: map,
         radius: 805,
