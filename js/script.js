@@ -15,9 +15,7 @@ var Location = function(dataObj) {
         dataObj.location.address = 'Not available';
     }
     this.address = dataObj.location.address;
-    //console.log(dataObj.categories[0].id);
     this.category = dataObj.categories[0].name;
-    //creates a marker for each location
     var marker = new google.maps.Marker({
                 position: {lat: dataObj.location.lat, lng: dataObj.location.lng}, 
                 map: map,
@@ -25,7 +23,6 @@ var Location = function(dataObj) {
                 content: dataObj.name + '<br>' + 'Address: ' + dataObj.location.address
             });
             marker.addListener('click', vm.markerClick);
-    console.log(this.category);
     if (this.category === "Grocery Store" || this.category === "Health Food Store" || this.category === "Supermarket" || this.category === "Gas Station") {
       var circleRed = new google.maps.Circle({
         map: map,
@@ -34,7 +31,6 @@ var Location = function(dataObj) {
       });
       circleRed.bindTo('center', marker, 'position');
     } else {
-      console.log("false");
       var circleYellow = new google.maps.Circle({
         map: map,
         radius: 805,
@@ -58,7 +54,6 @@ var ViewModel = function() {
         //4bf58dd8d48988d163941735 (park id)
         var placeData = [];
         //Get foursquare data
-        console.log(fourSquareURL);
         $.getJSON(fourSquareURL, function(data) {
             placeData = data.response.venues;
             //Create loations once foursquare data is received
@@ -172,19 +167,23 @@ function initMap() {
     ko.applyBindings(vm);
 }
 
-function geocodeAddress(geocoder, resultsMap) {
-var address = document.getElementById('address').value;
-geocoder.geocode({'address': address}, function(results, status) {
-  if (status === 'OK') {
-    resultsMap.setCenter(results[0].geometry.location);
-    var marker = new google.maps.Marker({
-      map: resultsMap,
-      position: results[0].geometry.location
-    });
-  } else {
-    alert('Geocode was not successful for the following reason: ' + status);
-  }
-});
+//this function takes creates a marker for the entered address and centers/zooms the map on it
+function geocodeAddress(geocoder, map) {
+	//this gets the address from the field and concatenates the city name	
+	var address = document.getElementById('address').value + " " + vm.city();
+	//this geocodes the address, creates a marker, and centers/zooms the map on that marker
+	geocoder.geocode({'address': address }, function(results, status) {
+	  if (status === 'OK') {
+	    map.setCenter(results[0].geometry.location);
+	    map.setZoom(15);
+	    var marker = new google.maps.Marker({
+	      map: map,
+	      position: results[0].geometry.location
+	    });
+	  } else {
+	    alert('Geocode was not successful for the following reason: ' + status);
+	  }
+	});
 }
 function googleError() {
      window.alert('Google Maps data request failed. Try again later.');
